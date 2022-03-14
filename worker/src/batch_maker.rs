@@ -79,7 +79,7 @@ impl BatchMaker {
                     self.current_batch_size += transaction.len();
                     self.current_batch.push(transaction);
                     if self.current_batch_size >= self.batch_size {
-                        self.seal();//.await;
+                        self.seal().await;
                         //timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
                     }
                 }//,
@@ -99,7 +99,7 @@ impl BatchMaker {
     }
 
     /// Seal and broadcast the current batch.
-    pub fn seal(&mut self) {
+    async fn seal(&mut self) {
         #[cfg(feature = "benchmark")]
         let size = self.current_batch_size;
 
