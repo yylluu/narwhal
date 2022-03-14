@@ -99,8 +99,7 @@ impl BatchMaker {
     }
 
     /// Seal and broadcast the current batch.
-    //async fn seal(&mut self) {
-    fn seal(&mut self) {
+    async fn seal(&mut self) {
         #[cfg(feature = "benchmark")]
         let size = self.current_batch_size;
 
