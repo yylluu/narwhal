@@ -141,8 +141,8 @@ class LogParser:
         tmp = findall(r'Batch ([^ ]+) contains (\d+) B', log)
         sizes = {d: int(s) for d, s in tmp}
 
-        tmp = findall(r'Batch ([^ ]+) contains sample tx (\d+)', log)
-        samples = {int(s): d for d, s in tmp}
+        tmp = findall(r'\[(.*Z) .* Batch ([^ ]+) contains sample tx (\d+)', log)
+        samples = {int(s): (d, self._to_posix(t)) for t, d, s in tmp}
 
         ip = search(r'booted on (\d+.\d+.\d+.\d+)', log).group(1)
 
@@ -179,10 +179,10 @@ class LogParser:
     def _end_to_end_latency(self):
         latency = []
         for sent, received in zip(self.sent_samples, self.received_samples):
-            for tx_id, batch_id in received.items():
+            for tx_id, (batch_id, start) in received.items():
                 if batch_id in self.commits:
                     assert tx_id in sent  # We receive txs that we sent.
-                    start = sent[tx_id]
+                    #start = sent[tx_id]
                     end = self.commits[batch_id]
                     latency += [end-start]
         return mean(latency) if latency else 0
