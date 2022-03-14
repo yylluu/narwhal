@@ -69,8 +69,8 @@ impl BatchMaker {
 
     /// Main loop receiving incoming transactions and creating batches.
     async fn run(&mut self) {
-        let timer = sleep(Duration::from_millis(self.max_batch_delay));
-        tokio::pin!(timer);
+        //let timer = sleep(Duration::from_millis(self.max_batch_delay));
+        //tokio::pin!(timer);
 
         loop {
             tokio::select! {
@@ -80,17 +80,17 @@ impl BatchMaker {
                     self.current_batch.push(transaction);
                     if self.current_batch_size >= self.batch_size {
                         self.seal().await;
-                        timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
+                        //timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
                     }
-                },
+                }//,
 
                 // If the timer triggers, seal the batch even if it contains few transactions.
-                () = &mut timer => {
-                    if !self.current_batch.is_empty() {
-                        self.seal().await;
-                    }
-                    timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
-                }
+                //() = &mut timer => {
+                //    if !self.current_batch.is_empty() {
+                //        self.seal().await;
+                //    }
+                //    timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
+                //}
             }
 
             // Give the change to schedule other tasks.
