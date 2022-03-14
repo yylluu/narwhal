@@ -80,7 +80,7 @@ impl BatchMaker {
                     self.current_batch_size += transaction.len();
                     self.current_batch.push(transaction);
                     if self.current_batch_size >= self.batch_size {
-                        block_on(self.seal());
+                        self.seal().await;
                         //timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
                     }
                 }//,
