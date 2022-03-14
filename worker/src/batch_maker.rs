@@ -1,4 +1,5 @@
 // Copyright(C) Facebook, Inc. and its affiliates.
+use futures::executor::block_on;
 use crate::quorum_waiter::QuorumWaiterMessage;
 use crate::worker::WorkerMessage;
 use bytes::Bytes;
@@ -79,7 +80,7 @@ impl BatchMaker {
                     self.current_batch_size += transaction.len();
                     self.current_batch.push(transaction);
                     if self.current_batch_size >= self.batch_size {
-                        self.seal().await;
+                        block_on(self.seal());
                         //timer.as_mut().reset(Instant::now() + Duration::from_millis(self.max_batch_delay));
                     }
                 }//,
